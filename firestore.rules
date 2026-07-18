@@ -1,0 +1,82 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Global Safety Net - Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- REUSABLE HELPERS ---
+    function isValidId(id) {
+      return id is string && id.size() <= 128;
+    }
+
+    // --- COLLECTION: EMOTIONS ---
+    match /emotions/{emotionId} {
+      allow read, write: if true;
+      
+      // Enforce schema validation
+      function isValidEmotion(data) {
+        return data.keys().hasAll(['id', 'date', 'emotion', 'class'])
+          && data.id is string
+          && data.date is string
+          && data.emotion in ['Senang', 'Biasa Saja', 'Sedih', 'Marah', 'Cemas', 'Sepi']
+          && data.class is string;
+      }
+    }
+
+    // --- COLLECTION: REQUESTS ---
+    match /requests/{requestId} {
+      allow read, write: if true;
+
+      // Enforce schema validation
+      function isValidRequest(data) {
+        return data.keys().hasAll(['id', 'name', 'class', 'date', 'message', 'contactMethod', 'status'])
+          && data.id is string
+          && data.name is string
+          && data.class is string
+          && data.date is string
+          && data.message is string
+          && data.contactMethod is string
+          && data.status in ['Menunggu', 'Dihubungi', 'Selesai'];
+      }
+    }
+
+    // --- COLLECTION: STUDENTS ---
+    match /students/{studentId} {
+      allow read, write: if true;
+
+      // Enforce schema validation
+      function isValidStudent(data) {
+        return data.keys().hasAll(['id', 'name', 'class', 'gender', 'status', 'tags'])
+          && data.id is string
+          && data.name is string
+          && data.class is string
+          && data.gender in ['L', 'P']
+          && data.status in ['active', 'monitored', 'resolved']
+          && data.tags is list;
+      }
+    }
+
+    // --- COLLECTION: SESSIONS ---
+    match /sessions/{sessionId} {
+      allow read, write: if true;
+
+      // Enforce schema validation
+      function isValidSession(data) {
+        return data.keys().hasAll(['id', 'studentId', 'studentName', 'studentClass', 'date', 'category', 'type', 'summary', 'actionPlan', 'status'])
+          && data.id is string
+          && data.studentId is string
+          && data.studentName is string
+          && data.studentClass is string
+          && data.date is string
+          && data.category in ['Akademik', 'Perilaku', 'Sosial', 'Keluarga', 'Emosional', 'Lainnya']
+          && data.type in ['Individu', 'Kelompok', 'Klasikal', 'Home Visit']
+          && data.summary is string
+          && data.actionPlan is string
+          && data.status in ['Selesai', 'Tindak Lanjut', 'Dirujuk'];
+      }
+    }
+  }
+}

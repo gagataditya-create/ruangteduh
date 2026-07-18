@@ -1,0 +1,6 @@
+{
+  "name": "Ruang Teduh - BK SMPN 2 Ayah",
+  "description": "Aplikasi catatan konfidensial Bimbingan Konseling (BK) dan safe space interaktif siswa untuk SMPN 2 Ayah.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

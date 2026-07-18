@@ -1,0 +1,83 @@
+{
+  "entities": {
+    "student": {
+      "title": "Student",
+      "description": "Profil Siswa Terdaftar di SMPN 2 Ayah",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID Unik Siswa" },
+        "name": { "type": "string", "maxLength": 100, "description": "Nama Lengkap Siswa" },
+        "class": { "type": "string", "maxLength": 15, "description": "Kelas Siswa" },
+        "gender": { "type": "string", "enum": ["L", "P"], "description": "Jenis Kelamin" },
+        "status": { "type": "string", "enum": ["active", "monitored", "resolved"], "description": "Status Konseling" },
+        "tags": { "type": "array", "description": "Tag penanda masalah/kategori siswa" },
+        "notes": { "type": "string", "maxLength": 1000, "description": "Catatan Latar Belakang" }
+      },
+      "required": ["id", "name", "class", "gender", "status", "tags"]
+    },
+    "session": {
+      "title": "SessionLog",
+      "description": "Jurnal Riwayat Sesi Bimbingan Konseling",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID Unik Sesi" },
+        "studentId": { "type": "string", "description": "ID Referensi Siswa" },
+        "studentName": { "type": "string", "maxLength": 100, "description": "Nama Siswa saat Sesi" },
+        "studentClass": { "type": "string", "maxLength": 15, "description": "Kelas Siswa saat Sesi" },
+        "date": { "type": "string", "format": "date", "description": "Tanggal Pelaksanaan Sesi" },
+        "category": { "type": "string", "enum": ["Akademik", "Perilaku", "Sosial", "Keluarga", "Emosional", "Lainnya"], "description": "Kategori Permasalahan" },
+        "type": { "type": "string", "enum": ["Individu", "Kelompok", "Klasikal", "Home Visit"], "description": "Tipe Layanan BK" },
+        "summary": { "type": "string", "maxLength": 2000, "description": "Ringkasan Sesi Konseling" },
+        "actionPlan": { "type": "string", "maxLength": 2000, "description": "Rencana Aksi Berkelanjutan" },
+        "status": { "type": "string", "enum": ["Selesai", "Tindak Lanjut", "Dirujuk"], "description": "Status Hasil Sesi" }
+      },
+      "required": ["id", "studentId", "studentName", "studentClass", "date", "category", "type", "summary", "actionPlan", "status"]
+    },
+    "request": {
+      "title": "CounselingRequest",
+      "description": "Pengajuan Curhat Mandiri dari Siswa (Kotak Curhat)",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID Unik Curhat" },
+        "name": { "type": "string", "maxLength": 100, "description": "Nama Pengirim (Bisa Anonim)" },
+        "class": { "type": "string", "maxLength": 15, "description": "Kelas Pengirim" },
+        "date": { "type": "string", "format": "date", "description": "Tanggal Kirim" },
+        "message": { "type": "string", "maxLength": 2000, "description": "Isi Curhat" },
+        "contactMethod": { "type": "string", "maxLength": 200, "description": "Metode Tindak Lanjut Pilihan" },
+        "status": { "type": "string", "enum": ["Menunggu", "Dihubungi", "Selesai"], "description": "Status Tindak Lanjut" }
+      },
+      "required": ["id", "name", "class", "date", "message", "contactMethod", "status"]
+    },
+    "emotion": {
+      "title": "EmotionalCheckIn",
+      "description": "Catatan Emosi Harian Siswa Terpadu",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID Unik Log" },
+        "date": { "type": "string", "format": "date", "description": "Tanggal Check-in" },
+        "emotion": { "type": "string", "enum": ["Senang", "Biasa Saja", "Sedih", "Marah", "Cemas", "Sepi"], "description": "Pilihan Emosi" },
+        "class": { "type": "string", "maxLength": 15, "description": "Kelas Siswa" },
+        "note": { "type": "string", "maxLength": 500, "description": "Catatan Tambahan Emosi" }
+      },
+      "required": ["id", "date", "emotion", "class"]
+    }
+  },
+  "firestore": {
+    "students": {
+      "schema": "student",
+      "description": "Daftar Siswa Terdaftar Konseling"
+    },
+    "sessions": {
+      "schema": "session",
+      "description": "Jurnal Catatan Sesi Konseling"
+    },
+    "requests": {
+      "schema": "request",
+      "description": "Kotak Pengajuan Curhat"
+    },
+    "emotions": {
+      "schema": "emotion",
+      "description": "Log Emosi Harian Siswa"
+    }
+  }
+}
